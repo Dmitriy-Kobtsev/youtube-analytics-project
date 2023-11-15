@@ -23,6 +23,30 @@ class Channel:
         self.video_count = self.channel["items"][0]["statistics"]["videoCount"]
         self.viewCount = self.channel["items"][0]["statistics"]["viewCount"]
 
+    def __str__(self):
+        return f'{self.title} ({self.url})'
+
+    def __add__(self, other):
+        return int(self.countsubScriber) + int(other.countsubScriber)
+
+    def __sub__(self, other):
+        return int(self.countsubScriber) - int(other.countsubScriber)
+
+    def __gt__(self, other):
+        return int(self.countsubScriber) > int(other.countsubScriber)
+
+    def __ge__(self, other):
+        return int(self.countsubScriber) >= int(other.countsubScriber)
+
+    def __lt__(self, other):
+        return int(self.countsubScriber) < int(other.countsubScriber)
+
+    def __le__(self, other):
+        return int(self.countsubScriber) <= int(other.countsubScriber)
+
+    def __eq__(self, other):
+        return int(self.countsubScriber) == int(other.countsubScriber)
+
     @classmethod
     def get_service(cls, channel_id):
         return cls(channel_id)
