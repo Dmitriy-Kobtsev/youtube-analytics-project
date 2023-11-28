@@ -1,4 +1,3 @@
-from src.video import Video
 import os
 import isodate
 from googleapiclient.discovery import build
@@ -10,23 +9,23 @@ class PlayList:
 
     def __init__(self, playlist_id):
 
-        playlist = PlayList.youtube.playlists().list(id = playlist_id,
-                                             part='snippet',
-                                             ).execute()
+        playlist = PlayList.youtube.playlists().list(id=playlist_id,
+                                                     part='snippet',
+                                                     ).execute()
         playlist_videos = PlayList.youtube.playlistItems().list(playlistId=playlist_id,
                                                                 part='contentDetails',
                                                                 maxResults=50,
                                                                 ).execute()
 
-        video_ids: list[str] = [video['contentDetails']['videoId'] for video in playlist_videos['items']]
+        video_ids = [video['contentDetails']['videoId'] for video in playlist_videos['items']]
 
         self.video_response = PlayList.youtube.videos().list(part='contentDetails,statistics',
-                                                        id=','.join(video_ids)
-                                                        ).execute()
-        self.id_= playlist_id
+                                                             id=','.join(video_ids)
+                                                             ).execute()
+        self.id = playlist_id
         self.title = playlist['items'][0]['snippet']['title']
         self.url = 'https://www.youtube.com/playlist?list=' + playlist_id
-
+        self.best_video = ''
 
     @property
     def total_duration(self):
@@ -45,8 +44,5 @@ class PlayList:
         for video in self.video_response['items']:
             if int(video['statistics']['likeCount']) > count_like:
                 count_like = int(video['statistics']['likeCount'])
-                best_video = 'https://youtu.be/' + video['id']
-        return best_video
-
-
-
+                self.best_video = 'https://youtu.be/' + video['id']
+        return self.best_video
